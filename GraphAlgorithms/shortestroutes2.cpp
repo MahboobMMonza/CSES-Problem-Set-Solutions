@@ -1,0 +1,120 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define fs first
+#define fio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0)
+#define sc second
+#define pb push_back
+#define eb emplace_back
+#define edl '\n'
+#define pf push_front
+#define ppb pop_back()
+#define fr front()
+#define bk back()
+#define sbf setbuf(stdout, 0)
+#define ppf pop_front()
+#define tp top()
+#define ps push
+#define pp pop()
+#define fls fflush(stdout)
+#define qu queue
+#define st stack
+#define pq priority_queue
+#define fora(i, a, b) for (int i = (a); i < (b); ++i)
+#define forae(i, a, b) for (int i = (a); i <= (b); ++i)
+#define foras(i, a, b, c) for (int i = (a); i < (b); i += (c))
+#define foraes(i, a, b, c) for (int i = (a); i <= (b); i += (c))
+#define ford(i, a, b) for (int i = (a); i > (b); --i)
+#define forde(i, a, b) for (int i = (a); i >= (b); --i)
+#define fords(i, a, b, c) for (int i = (a); i > (b); i -= (c))
+#define fordes(i, a, b, c) for (int i = (a); i >= (b); i -= (c))
+#define forals(i, a, b, c) for (long long i = (a); i < (b); i += (c))
+#define foraels(i, a, b, c) for (long long i = (a); i <= (b); i += (c))
+#define fordls(i, a, b, c) for (long long i = (a); i > (b); i -= (c))
+#define fordels(i, a, b, c) for (long long i = (a); i >= (b); i -= (c))
+#define MOD (int) (1e9 + 7)
+
+typedef unsigned long long ull;
+typedef unsigned int uint;
+typedef long long ll;
+typedef pair<int, int> pi;
+typedef pair<int, ll> pil;
+typedef pair<ll, int> pli;
+typedef pair<ll, ll> pl;
+typedef pair<ull, ull> pull;
+typedef pair<int, pi> pii;
+typedef pair<ll, pl> pll;
+typedef pair<pi, pi> ppi;
+typedef pair<char, int> pci;
+
+inline ll mulMod(ll x, ll y, ll m = LONG_LONG_MAX) {
+    x %= m;
+    ll res = 0;
+    while (y) {
+        if (y & 1) res = (res + x) % m;
+        if (res < 0) res += m;
+        x = (x << 1) % m;
+        y >>= 1;
+    }
+    return res % m;
+}
+
+inline ll logPow(ll x, ll y, ll m = LONG_LONG_MAX) {
+    x %= m;
+    ll res = 1;
+    while (y) {
+        if (y & 1) res = mulMod(res, x, m);
+        x = mulMod(x, x, m);
+        y >>= 1;
+    }
+    return res % m;
+}
+
+inline ll fsLogPow(ll x, ll y) {
+    ll res = 1;
+    while (y) {
+        if (y & 1) res *= x;
+        x *= x;
+        y >>= 1;
+    }
+    return res;
+}
+
+inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) { return logPow(x, y % (m - 1), m); }
+
+int main() {
+    /**
+     * Simple application of Floyd-Warshall algo.
+     */
+    fio;
+    int n, m, a, b, q;
+    ll c;
+    cin >> n >> m >> q;
+    vector<vector<ll>> g(n, vector<ll>(n, INT64_MAX));
+    fora(i, 0, n) {
+        g[i][i] = 0;
+    }
+    while (m--) {
+        cin >> a >> b >> c;
+        a--, b--;
+        g[a][b] = min(g[a][b], c);
+        g[b][a] = min(g[b][a], c);
+    }
+    fora(k, 0, n) {
+        fora(i, 0, n) {
+            fora(j, 0, n) {
+                if (g[i][k] == INT64_MAX || g[k][j] == INT64_MAX) continue;
+                // Since roads are all bidirectional
+                g[i][j] = min(g[i][j], g[i][k] + g[k][j]);
+                g[j][i] = g[i][j];
+            }
+        }
+    }
+    while (q--) {
+        cin >> a >> b;
+        a--, b--;
+        cout << (g[a][b] == INT64_MAX ? -1: g[a][b]) << edl;
+    }
+    return 0;
+}

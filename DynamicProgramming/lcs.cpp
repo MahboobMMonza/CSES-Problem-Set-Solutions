@@ -123,6 +123,13 @@ int main() {
      *
      * Since the sequence needs to be reconstructed, cannot use the swap row technique for O(n) space. Don't include
      * row or column for null sequences, so do extra accounting for i == 0 or j == 0.
+     *
+     * To reconstruct the LCS, start at LCS[n - 1][m - 1] (0-indexed), and follow backwards (in the i - 1 or j - 1
+     * directions) the largest LCS value neighbouring that cell. If LCS[i][j] > both LCS[i - 1][j] and LCS[i][j - 1],
+     * then a take was performed on the element at a[i], in which case, navigate to LCS[i - 1][j - 1] and continue.
+     * Whenever a take is performed, add a[i] to a stack. Continue until either i or j move backwards from 0. The
+     * stack contains the LCS sequence in reverse order, so print it in reverse if using a vector, or print the top
+     * element until the stack is empty.
      */
     fio;
     size_t n, m;

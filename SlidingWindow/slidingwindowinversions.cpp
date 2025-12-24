@@ -114,7 +114,6 @@ inline ll fsLogPow(ll x, ll y) {
 
 inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) { return logPow(x, y % (m - 1), m); }
 
-
 int main() {
     /**
      * Use an order-tracking tree (GNU PBDS treeset), store a sorted list reflecting the current window. If the

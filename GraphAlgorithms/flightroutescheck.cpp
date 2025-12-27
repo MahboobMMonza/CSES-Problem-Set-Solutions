@@ -232,21 +232,21 @@ int main() {
     }
     int comp_idx = 0;
     st<int> disjoint;
-    while (!order.empty()) {
+    while (!order.empty() && comp_idx <= 1) {
         const auto cur = order.tp;
         order.pp;
         if (rev_vis.get(cur)) continue;
         disjoint.emplace(cur);
-        reverseDFS(cur, comp_idx++, rev_heads, rev_edges, rev_vis, components);
+        if (++comp_idx > 1) break;
+        reverseDFS(cur, comp_idx - 1, rev_heads, rev_edges, rev_vis, components);
     }
-    if (comp_idx == 1) {
-        cout << "YES" << edl;
-        return 0;
-    }
-    cout << "NO" << edl;
-    foraz(i, 0, 2) {
+    if (comp_idx > 1) {
+        cout << "NO" << edl;
         cout << (disjoint.tp + 1) << ' ';
         disjoint.pp;
+        cout << (disjoint.tp + 1) << ' ';
+        return 0;
     }
+    cout << "YES" << edl;
     return 0;
 }

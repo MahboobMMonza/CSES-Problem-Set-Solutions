@@ -188,7 +188,8 @@ findCycle(vector<int> &heads, vector<edge> &edges, vector<ll> &marks, vector<int
 
 int main() {
     /**
-     * Topological sort using DFS, and if it fails, that means we have a cycle that satisfies our requirements.
+     * Topological sort using DFS, and if it fails, that means we have a cycle that satisfies our requirements. Print
+     * that cycle.
      */
     fio;
     int n, m, a, b;

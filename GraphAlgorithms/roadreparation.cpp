@@ -96,7 +96,7 @@ int find(int x, vector<int> &parent) {
     return root;
 }
 
-bool join(int c1, int c2, vector<int> &parent, vector<int> &rank, st<int> &stk) {
+bool join(int c1, int c2, vector<int> &parent, vector<int> &rank) {
     int p1 = find(c1, parent), p2 = find(c2, parent);
     if (p1 == p2) {
         return false;
@@ -131,7 +131,7 @@ int main() {
     }
     sort(edges.begin(), edges.end());
     fora(i, 0, m) {
-        bool res = join(edges[i].sc.fs, edges[i].sc.sc, parent, rank, stk);
+        bool res = join(edges[i].sc.fs, edges[i].sc.sc, parent, rank);
         if (res) {
             ec++;
             cost += edges[i].fs;

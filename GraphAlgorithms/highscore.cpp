@@ -156,9 +156,15 @@ int main() {
      * appropriate output. This check at the nth iteration compensates for SPFA's inability to detect negative cycles
      * inherently. Negate the score before outputting.
      *
+     * We can convert this to a shortest path problem if we negate the edge weights. A negative weight cycle in this
+     * graph corresponds to a positive weight cycle in the original graph, which is something we want to account for
+     * anyways. So even though finding a "longest path" in a directed weighted graph is NP-complete, our formulation
+     * does not necessarily look for the same formulation of a simple path.
+     *
      * Before using SPFA, run a reverse graph to "prune" the graph to only nodes reachable from the target node, so that
-     * cycles are avoided. Use DFS on the reverse graph and keep a visited list to track all reachable nodes from the
-     * target node.
+     * unnecessary cycles are avoided. Use DFS on the reverse graph and keep a visited list to track all reachable
+     * nodes from the target node. This means that any cycle that exists but does not have an "out" to the
+     * destination node can be avoided.
      */
     fio;
     int n, m, a, b, iters = 0;

@@ -143,7 +143,7 @@ int main() {
     /**
      * Topological sort using DFS (same caveats as Course Schedule). Afterwards, traverse the order, ignoring everyone
      * until the starting node is node 1, then update the cost of each of the neighbours to be 1 + cur cost or best
-     * cost.
+     * cost. This is because the graph is a DAG, and we can find the longest path of a DAG using top-sorting/DP.
      */
     fio;
     int n, m, a, b;

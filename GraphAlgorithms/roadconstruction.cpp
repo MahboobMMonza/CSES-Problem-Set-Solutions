@@ -105,7 +105,11 @@ pair<bool, int> join(int c1, int c2, vector<int> &parent, vector<int> &size) {
 
 int main() {
     /**
-     * Use disjoint-set with unity by sz.
+     * Construct an MST using disjoint-set with unity by size and path halfing (not full path compression, not needed
+     * really because we find again afterwards). Once an edge is given, attempt a join, tracking the size of each
+     * component, and return the size of the combined component at the end of the join. Update the max size based on
+     * these joins and print after each edge is given. If all nodes are already connected, then we can by pass
+     * processing altogether.
      */
     fio;
     int n, m, ec = 0, a, b;

@@ -104,6 +104,11 @@ bool dfs(int src, const vector<vector<int>> &friends, vector<int> &teams, qu<pi>
 }
 
 int main() {
+    /**
+     * Simple graph 2-colorability. Track visited status using the "colour"/team array. 0 -> unvisited, 1 -> team 1,
+     * 2 -> team 2. If any neighbour is the same colour as the currently explored node in the DFS, then it is
+     * impossible to assign the teams in such a way that no two neighbours are friends.
+     */
     fio;
     int n, m, a, b;
     cin >> n >> m;

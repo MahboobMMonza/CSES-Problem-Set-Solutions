@@ -99,7 +99,13 @@ typedef struct {
 
 int main() {
     /**
-     * Simple application of Dijkstra's from a singular source node to all other nodes.
+     * Simple application of Dijkstra's from a singular source node to all other nodes, and construction of the
+     * reverse graph Dijkstra's from the destination to the source. Then try every single edge, and if traversing to
+     * that edge when the cost is halved reduces the cost of the trip, then update the new minimum cost. To calculate
+     * the new cost, take the cost of the forward graph from the source node to the "from: node of the edge, add the
+     * cost of the reverse graph from the destination to the "to" node of the graph, and add the cost of the edge / 2
+     * . The distance of any node in the reverse graph corresponds to the sortest distance to the destination node
+     * from that node in the forward graph.
      */
     fio;
     int n, m, b, a, nbr;
@@ -116,7 +122,7 @@ int main() {
         edges[i].from = a;
         edges[i].to = b;
         edges[i].cost = c;
-        edges[i].nxt = heads[a].fs;
+        edges[i].fnxt = heads[a].fs;
         edges[i].rnxt = heads[b].sc;
         heads[a].fs = i;
         heads[b].sc = i;
@@ -131,7 +137,7 @@ int main() {
             continue;
         }
         toggleBit(a, vis);
-        for (int idx = heads[a].fs; idx != -1; idx = edges[idx].nxt) {
+        for (int idx = heads[a].fs; idx != -1; idx = edges[idx].fnxt) {
             nbr = edges[idx].to;
             ccst = edges[idx].cost + d[a];
             if (isSet(nbr, vis) || ccst >= d[nbr]) {

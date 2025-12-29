@@ -123,6 +123,11 @@ bool dfsCycle(int src, vector<vector<int>> &adj, vector<int> &pred, vector<bool>
 }
 
 int main() {
+    /**
+     * Do a DFS on the graph, tracking the predecessor of the node during the traversal. If we neighbour a node we
+     * have already visited which is not the direct predecessor to our node, then we have found a cycle of 3 or more
+     * nodes.
+     */
     fio;
     int n, m;
     cin >> n >> m;

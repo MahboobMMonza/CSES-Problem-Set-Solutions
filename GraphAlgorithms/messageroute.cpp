@@ -104,6 +104,9 @@ int bfs(int src, vector<vector<int>> &adj, vector<bool> &vis, vector<int> &pred,
 }
 
 int main() {
+    /**
+     * Simple BFS from source node to destination node.
+     */
     fio;
     int n, m, a, b;
     cin >> n >> m;

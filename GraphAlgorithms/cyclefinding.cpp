@@ -130,7 +130,7 @@ void printCycle(const vector<int> &cycle) {
     }
 }
 
-vector<int> traceCycle(int b, const vector<int> &pred) {
+vector<int> traceCycle(const int b, const vector<int> &pred) {
     vector<int> ans;
     int a = b;
     ans.pb(a);
@@ -150,7 +150,7 @@ typedef struct edge {
 
 int main() {
     /**
-     * Use SPFA (which is just a faster Bellman-Ford) to calculate the shortest path Every nth iteration of the loop,
+     * Use SPFA (which is just a faster Bellman-Ford) to calculate the shortest path. Every nth iteration of the loop,
      * check for a negative cycle, and if one exists, then terminate with the appropriate output. This check at the nth
      * iteration compensates for SPFA's inability to detect negative cycles inherently.
      */

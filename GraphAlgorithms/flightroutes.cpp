@@ -99,7 +99,12 @@ typedef struct {
 
 int main() {
     /**
-     * Apply Dijkstra's but instead allow a repeat node to appear up to K times.
+     * Apply Dijkstra's but instead allow a repeat node to appear up to K times. This is because by the property of
+     * Dijkstra's algorithm's choice of the next node to search being lowest cost, the first the node appears is the
+     * lowest cost to that node, the second time is the second lowest, ..., the Kth time is the Kth lowest. Instead
+     * of having a boolean vis[] array then, we can have an integer count of how many times the current node has been
+     * visited. Every time the destination node is found, push the distance into a list with the Kth shortest
+     * distances. Once all K distances are found, sort and print the list.
      */
     fio;
     int n, m, b, a, nbr, k;

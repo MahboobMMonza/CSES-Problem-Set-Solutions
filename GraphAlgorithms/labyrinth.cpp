@@ -109,8 +109,14 @@ int bfs(int r, int c, vector<string> &grid, vector<vector<int>> &trace, qu<pii> 
 }
 
 int main() {
+    /**
+     * BFS from end node to start node, and keep a trace. This is because if the trace is followed from end to start,
+     * then the path from start to end will be printed in reverse. So if we reverse the start and end, then the trace
+     * will go from start to end. Ensure that the opposite direction from the trace is printed and taken, as the
+     * trace contains the move done from the end instead of the start.
+     */
     fio;
-    int n, m, ans = 0, r, c, ar, ac;
+    int n, m, ans = 0, r = -1, c = -1, ar = -1, ac = -1;
     cin >> n >> m;
     vector<string> grid(n);
     // NORMAL: U, D, L, R

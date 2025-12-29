@@ -95,8 +95,9 @@ int find(int x, vector<int> &parent) {
     return root;
 }
 
-bool join(int c1, int c2, vector<int> &parent, vector<int> &rank) {
-    int p1 = find(c1, parent), p2 = find(c2, parent);
+bool join(const int c1, const int c2, vector<int> &parent, vector<int> &rank) {
+    // Union-find using path and rank compression
+    const int p1 = find(c1, parent), p2 = find(c2, parent);
     if (p1 == p2) {
         return false;
     }
@@ -113,9 +114,11 @@ bool join(int c1, int c2, vector<int> &parent, vector<int> &rank) {
 int main() {
     fio;
     /**
-     * Use disjoint-se structure with union-find to see what the current reachability is. If all nodes are reachable,
-     * then return, otherwise pair any nodes that do not reach from 1 using join, which returns true only when a new
-     * connection is formed.
+     * Use disjoint-set structure with union-find to see what the current reachability is. If all nodes are reachable,
+     * then return, otherwise pair any nodes that do not reach from 1 using join(), which returns true only when a new
+     * connection is formed. This can be acheived by attempting to connect each node to node 1. If a new connection
+     * is formed since the union call returns true, print the edge. Otherwise skip if the two nodes are already
+     * connected.
      */
     int n, m, ec = 0, a, b;
     cin >> n >> m;

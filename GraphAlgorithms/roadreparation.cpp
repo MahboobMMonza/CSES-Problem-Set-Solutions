@@ -119,7 +119,7 @@ int main() {
     int n, m, ec = 0, a, b;
     ll cost = 0, c;
     cin >> n >> m;
-    vector<int> parent(n), rank(n, 0), ans;
+    vector<int> parent(n), rank(n, 0);
     vector<plpi> edges(m);
     fora(i, 0, n) {
         parent[i] = i;
@@ -131,7 +131,7 @@ int main() {
     }
     sort(edges.begin(), edges.end());
     fora(i, 0, m) {
-        bool res = join(edges[i].sc.fs, edges[i].sc.sc, parent, rank);
+        const bool res = join(edges[i].sc.fs, edges[i].sc.sc, parent, rank);
         if (res) {
             ec++;
             cost += edges[i].fs;

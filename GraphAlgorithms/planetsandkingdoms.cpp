@@ -129,21 +129,19 @@ typedef struct edge {
 class ICommand {
 public:
     virtual void
-    execute(int a, int &idx, int nbrIdx, int prvNbr, vector<int> &heads, vector<edge> &edges, vector<int> &index,
-            vector<int> &low, st<int> &stk, BitVector &onStk, st<tuple<int, int, int, ICommand &> > &calls) = 0;
+    execute(int a, int &idx, vector<int> &heads, vector<edge> &edges, vector<int> &index, vector<int> &low,
+            st<int> &stk, BitVector &onStk, BitVector &searching, st<tuple<int, ICommand &> > &calls) = 0;
 
     virtual ~ICommand() = default;
 };
 
 class CompleteCommand final : public ICommand {
 public:
-    void execute(const int a, int &idx, int nbrIdx, int prvNbr, vector<int> &heads, vector<edge> &edges,
-                 vector<int> &index, vector<int> &low, st<int> &stk, BitVector &onStk,
-                 st<tuple<int, int, int, ICommand &> > &calls) override {
+    void execute(const int a, int &idx, vector<int> &heads, vector<edge> &edges, vector<int> &index, vector<int> &low,
+                 st<int> &stk, BitVector &onStk, BitVector &searching, st<tuple<int, ICommand &> > &calls) override {
         // Update lowlink only if this is still on stack
-        if (!onStk.get(a)) return;
         // No need to do anything else if we are not the lowest id of a cycle
-        if (low[a] != index[a]) return;
+        if (!onStk.get(a) || low[a] != index[a]) return;
         // Update lowlink of each node in the cycle and remove from stack
         onStk.clear(a);
         do {
@@ -166,32 +164,32 @@ public:
     explicit VisitCommand(ICommand &completed) : completed(completed) {
     }
 
-    void execute(const int a, int &idx, int nbrIdx, int prvNbr, vector<int> &heads, vector<edge> &edges,
-                 vector<int> &index, vector<int> &low, st<int> &stk, BitVector &onStk,
-                 st<tuple<int, int, int, ICommand &> > &calls) override {
+    void execute(const int a, int &idx, vector<int> &heads, vector<edge> &edges, vector<int> &index, vector<int>
+        &low, st<int> &stk, BitVector &onStk, BitVector &searching, st<tuple<int, ICommand &> > &calls) override {
         // Make sure we haven't completely visited this node, classic iterative DFS safeguard
-        if (index[a] != -1 && nbrIdx == -1 && prvNbr == -1) return;
+        if (index[a] != -1 && heads[a] == -1 && searching.get(a)) return;
         // Come back to complete it at the end
         // Initial adding of this node completion to the component stack
-        if (nbrIdx == heads[a]) {
-            calls.emplace(a, -1, -1, completed);
+        if (!searching.get(a)) {
+            calls.emplace(a, completed);
             stk.emplace(a);
             onStk.set(a);
             index[a] = low[a] = idx++;
         }
+        int &nbrIdx = heads[a];
         // If some previous nbr was just visited, update our lowlink with that of the previously visited nbr
-        if (prvNbr != -1) {
-            low[a] = min(low[a], low[prvNbr]);
+        if (searching.get(a)) {
+            low[a] = min(low[a], low[edges[nbrIdx].to]);
         }
         // Iterate from the next nbr to visit and visit them, skipping already visited nbrs
         for (; nbrIdx != -1; nbrIdx = edges[nbrIdx].nxt) {
             const int &nbr = edges[nbrIdx].to;
-            const int &next = edges[nbrIdx].nxt;
             // We found a nbr that was not yet visited, update callstack to resume iteration from next point noting
             // that we visited this nbr, then visit that nbr with no previous visits.
             if (index[nbr] == -1) {
-                calls.emplace(a, next, nbr, *this);
-                calls.emplace(nbr, heads[nbr], -1, *this);
+                calls.emplace(a, *this);
+                calls.emplace(nbr, *this);
+                searching.set(a);
                 break;
             }
             // If the nbr has been visited but not completely, update our lowlink
@@ -206,27 +204,25 @@ void tarjan(const int n, vector<int> &heads, vector<edge> &edges, vector<int> &i
     /**
      * Iterative version of Tarjan's algorithm. Use a call stack to trace the DFS with different commands and logic
      * for when a node is being visited or has finished visiting all its neighbours. Need to bookkeep the lowlink/index
-     * tracker (idx), the index of the edge for the next neighbour to visit (nbrIdx), and the previously visited
-     * neighbour (prvNbr). References to heads, edges, index, and low represent the graph and the global data
-     * Tarjan's algorithm needs for SCC. If it were a class, they would be public members. The onStk set is another
-     * global variable required by the algorithm but only for the search and do not need to be returned to the user.
+     * tracker (idx) and the which neighbour was visited/will be visited next (use heads destructively). References
+     * to heads, edges, index, and low represent the graph and the global data Tarjan's algorithm needs for SCC. If
+     * it were a class, they would be public members. The onStk and searching set is another global variable required
+     * by the algorithm but only for the search and does not need to be returned to the user.
      */
     CompleteCommand complete;
     VisitCommand visit(complete);
     st<int> stk;
-    BitVector onStk(n);
-    st<tuple<int, int, int, ICommand &> > calls;
+    BitVector onStk(n), searching(n);
+    st<tuple<int, ICommand &> > calls;
     int idx = 0;
     fora(i, 0, n) {
         if (index[i] == -1) {
-            calls.emplace(i, heads[i], -1, visit);
+            calls.emplace(i, visit);
             while (!calls.empty()) {
                 const auto cur = get<0>(calls.tp);
-                const auto nbrIdx = get<1>(calls.tp);
-                auto prvNbr = get<2>(calls.tp);
-                auto &cmd = get<3>(calls.tp);
+                auto &cmd = get<1>(calls.tp);
                 calls.pp;
-                cmd.execute(cur, idx, nbrIdx, prvNbr, heads, edges, index, low, stk, onStk, calls);
+                cmd.execute(cur, idx, heads, edges, index, low, stk, onStk, searching, calls);
             }
         }
     }

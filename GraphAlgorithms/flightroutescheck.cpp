@@ -147,7 +147,7 @@ void forwardDFS(const int a, const vector<int> &heads, const vector<edge> &edges
     st<pair<int, Stage>> calls;
     calls.emplace(a, Stage::VISIT);
     while (!calls.empty()) {
-        auto cur = calls.tp.fs;
+        const auto cur = calls.tp.fs;
         const auto com = calls.tp.sc;
         calls.pp;
         if (com == Stage::COMPLETE) {

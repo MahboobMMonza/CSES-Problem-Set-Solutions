@@ -251,7 +251,8 @@ ull solve(const vector<int> &heads, vector<int> &trav_heads, vector<int> &level,
 
 int main() {
     /**
-     *
+     * Classic implementation of non-recursive Dinic's algo. Recursion replaced with own call stack. Use a second heads
+     * array to complete tracked traversal during dfs, and copy back afterwards for next stage.
      */
     fio;
     size_t n, m;

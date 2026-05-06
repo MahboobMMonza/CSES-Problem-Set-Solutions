@@ -233,7 +233,7 @@ ll dfs(vector<int> &heads, vector<edge> &edges, vector<int> &level, BitVector &s
     return found ? cap : 0;
 }
 
-ull solve(const vector<int> &heads, vector<int> &trav_heads, vector<int> &level, vector<edge> &edges, BitVector
+ull getFlow(const vector<int> &heads, vector<int> &trav_heads, vector<int> &level, vector<edge> &edges, BitVector
           &searching) {
     ull max_flow = 0;
     while (bfs(heads, level, edges)) {
@@ -276,6 +276,6 @@ int main() {
         edges[rev_idx].max_capacity = speed;
         edges[rev_idx].flow = speed;
     }
-    cout << solve(heads, trav_heads, level, edges, searching) << edl;
+    cout << getFlow(heads, trav_heads, level, edges, searching) << edl;
     return 0;
 }

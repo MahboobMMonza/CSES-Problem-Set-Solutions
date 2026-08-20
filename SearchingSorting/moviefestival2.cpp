@@ -84,7 +84,18 @@ inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) { return logPow(x, y %
 
 int main() {
     /**
+     * First sort all movies in non-decreasing order by end time. To simulate the k members watching,
+     * store a set of k elements where each element denotes the first available time (AT) for each
+     * member,which is initially 0. Then iterate the movies checking their start times (ST) against
+     * the set to see if there is a next AT <= the current movie ST. This denotes a free member.
+     * Update this member's next AT by erasing the found AT and inserting the current movie end time.
      *
+     * Since by default C++ ordered set does not allow you to query greedily the largest AT <= ST,
+     * we can get this by storing the end times as negative numbers which would "reverse" the set
+     * and a lower_bound query which represents: 
+     * smallest NEGATIVE AT >= -ST <==> largest POSITIVE AT <= ST.
+     *
+     * Alternatively count "misses" and print n - cnt to get total movies watched.
      */
     fio;
     int n, k, cnt = 0;

@@ -90,6 +90,11 @@ fabric.properties
 !.idea/runConfigurations
 
 # End of https://www.toptal.com/developers/gitignore/api/clion+all
+
 Inputs/
 scratch.cpp
 CMakeLists.txt
+.vscode/
+build*/
+.cache/
+gcc-toolchain.cmake

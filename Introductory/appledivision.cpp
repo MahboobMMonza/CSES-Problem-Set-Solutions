@@ -41,7 +41,7 @@ typedef pair<ll, pl> pll;
 typedef pair<pi, pi> ppi;
 typedef pair<char, int> pci;
 
-inline ll mulMod(ll x, ll y, ll m = LONG_LONG_MAX) {
+inline ll mulMod(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
     ll res = 0;
     while (y) {
@@ -53,7 +53,7 @@ inline ll mulMod(ll x, ll y, ll m = LONG_LONG_MAX) {
     return res % m;
 }
 
-inline ll logPow(ll x, ll y, ll m = LONG_LONG_MAX) {
+inline ll logPow(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
     ll res = 1;
     while (y) {
@@ -85,7 +85,7 @@ int main() {
      * (t - s2) - s2 = t - 2 * s2. The difference is 0 when s2 = t/2, and the closer it is, the smaller the difference.
      */
     int n;
-    ll ts = 0, cs, hs, ans = LONG_LONG_MIN;
+    ll ts = 0, cs, hs, ans = numeric_limits<ll>::min();
     vector<ll> x(20);
     bool fl = 0;
     cin >> n;

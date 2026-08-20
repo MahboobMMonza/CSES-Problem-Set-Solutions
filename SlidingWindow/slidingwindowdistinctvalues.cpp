@@ -62,7 +62,7 @@ struct custom_hash {
     }
 };
 
-inline ll mulMod(ll x, ll y, ll m = LONG_LONG_MAX) {
+inline ll mulMod(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
     ll res = 0;
     while (y) {
@@ -74,7 +74,7 @@ inline ll mulMod(ll x, ll y, ll m = LONG_LONG_MAX) {
     return res % m;
 }
 
-inline ll logPow(ll x, ll y, ll m = LONG_LONG_MAX) {
+inline ll logPow(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
     ll res = 1;
     while (y) {

@@ -79,7 +79,7 @@ using indexed_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 template<typename T, typename K>
 using indexed_map = tree<T, K, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-inline ll mulMod(ll x, ll y, ll m = LONG_LONG_MAX) {
+inline ll mulMod(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
     ll res = 0;
     while (y) {
@@ -91,7 +91,7 @@ inline ll mulMod(ll x, ll y, ll m = LONG_LONG_MAX) {
     return res % m;
 }
 
-inline ll logPow(ll x, ll y, ll m = LONG_LONG_MAX) {
+inline ll logPow(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
     ll res = 1;
     while (y) {

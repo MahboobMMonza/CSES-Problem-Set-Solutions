@@ -78,7 +78,7 @@ inline ll fsLogPow(ll x, ll y) {
 
 inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) { return logPow(x, y % (m - 1), m); }
 
-bool cmp1(pii &a, pii &b) {
+bool cmp(pii &a, pii &b) {
     return (a.sc.fs < b.sc.fs) || (a.sc.fs == b.sc.fs && b.sc.sc <= a.sc.sc);
 }
 
@@ -96,23 +96,9 @@ int main() {
         cin >> ranges[i].sc.fs >> ranges[i].sc.sc;
     }
     sort(ranges.begin(), ranges.end(), cmp);
-    // Viewer
-    /*
-    for (const auto &item: ranges) {
-        cout << setfill('0') << setw(3) << item.fs << ": ";
-        for (int i = 0; i < item.sc.fs - ranges[0].sc.fs; ++i) {
-            cout << ' ';
-        }
-        cout << '|';
-        for (int i = 1; i < item.sc.sc - item.sc.fs; ++i) {
-            cout << '-';
-        }
-        cout << '|' << edl;
-    }
-    */
     // contained
 
-    // Every one is sorted such that the leftmost bounds are first, and fir ties, larger right bounds first
+    // Everyone is sorted such that the leftmost bounds are first, and fir ties, larger right bounds first
     // This means that if right[i] < right[i-k] for k > 0, then i is contained by i - k. Since we don't care
     // about who exactly contains, just track the largest right boundary so far.
     bound = -1;
@@ -124,7 +110,7 @@ int main() {
     }
     // contains
 
-    // Every one is sorted such that the leftmost bounds are first, and fir ties, larger right bounds first
+    // Everyone is sorted such that the leftmost bounds are first, and fir ties, larger right bounds first
     // This means that if right[i] >= right[i+k] for k > 0, then i contains i + k. Since we don't care
     // about who exactly contains, just track the smallest right boundary so far.
     bound = INT32_MAX;

@@ -111,6 +111,10 @@ struct endpoint {
     bool operator<(const endpoint& rhs) const {
         return end == rhs.end ? idx > rhs.idx : end < rhs.end;
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const endpoint& e) {
+        return os << "endpoint(" << e.end << ", " << e.idx << ")";
+    }
 };
 
 inline ll fsLogPow(ll x, ll y) {

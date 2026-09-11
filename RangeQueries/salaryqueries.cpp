@@ -49,8 +49,10 @@ typedef pair<ll, pl> pll;
 typedef pair<pi, pi> ppi;
 typedef pair<char, int> pci;
 
-template <typename T>
+template<typename T>
 using indexed_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template<typename T, typename K>
+using indexed_map = tree<T, K, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
 inline ll mulMod(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
@@ -89,7 +91,12 @@ inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) { return logPow(x, y %
 
 int main() {
     /**
-     * Maybe just a multiset can be used?
+     * Use an indexed set to track employees by salary. Since multiple employees can have the same
+     * salary, store the index of the employee in a pair. Track the salaries in both the original
+     * array and the indexed set to directly and correctly access employees for updates. When
+     * querying, set the lower limit to be salary a with index 0, and upper limit to be salary
+     * b with index n (or infinity). Subtract the positions to get the count, and this will be
+     * exclusive of the upper limit.
      */
     fio;
      int n, q;

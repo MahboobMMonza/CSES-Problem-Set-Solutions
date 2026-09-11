@@ -127,7 +127,7 @@ public:
 
 };
 
-int add_int(int a, int b) {
+int int_min(int a, int b) {
     return min(a, b);
 }
 
@@ -143,7 +143,7 @@ int main() {
     fora(i, 0, n) {
         cin >> data[i];
     }
-    SegmentTree<int> seg(data, add_int, INT32_MAX);
+    SegmentTree<int> seg(data, int_min, INT32_MAX);
     while (q--) {
         cin >> t >> a >> b;
         if (t == 2) {

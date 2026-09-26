@@ -80,6 +80,12 @@ inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) { return logPow(x, y %
 
 int main() {
     fio;
+    /**
+     * Similar to coin combos 1 except order of coin selection matters.
+     * As such, iterate through each coin in the outer loop, and this
+     * would represent reaching each value i from 1..target using the
+     * first j coins, thereby preserving order.
+     */
     int n, target;
     cin >> n >> target;
     vector<int> ways(target + 1), coins(n);

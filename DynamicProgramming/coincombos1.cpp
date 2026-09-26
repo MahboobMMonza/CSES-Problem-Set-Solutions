@@ -79,6 +79,11 @@ inline ll fsLogPow(ll x, ll y) {
 inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) { return logPow(x, y % (m - 1), m); }
 
 int main() {
+    /**
+     * For each value i in 1..target, iterate through each coin (j), and if 
+     * i - coins[j] >= 0, add number of ways to reach value i - coins[j] to
+     * number of ways to reach i.
+     */
     fio;
     int n, target;
     cin >> n >> target;

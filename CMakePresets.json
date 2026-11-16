@@ -1,0 +1,35 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Ninja Multi-Config (GCC Toolchain)",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build",
+      "toolchainFile": "${sourceDir}/gcc-toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug Build",
+      "configurePreset": "default",
+      "configuration": "Debug"
+    },
+    {
+      "name": "release",
+      "displayName": "Release Build",
+      "configurePreset": "default",
+      "configuration": "Release"
+    }
+  ]
+}
+

@@ -1,0 +1,20 @@
+CompileFlags:
+  CompilationDatabase: build/
+  Add:
+    - -O0
+    - -g
+
+  Remove:
+    # Release flags
+    - -O1
+    - -O2
+    - -O3
+    - -Os
+    - -Ofast
+    - --DNDEBUG
+    # -Sanitizers
+    - --fsanitize=*
+    - -fno-sanitize-recover=*
+
+Diagnostics:
+  UnusedIncludes: Strict

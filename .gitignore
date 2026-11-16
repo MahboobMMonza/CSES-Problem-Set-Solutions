@@ -98,3 +98,4 @@ CMakeLists.txt
 build*/
 .cache/
 gcc-toolchain.cmake
+.DS_Store

@@ -114,33 +114,29 @@ using indexed_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 template<typename T, typename K>
 using indexed_map = tree<T, K, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
-template<typename Derived, typename T>
-class ISegNode {
-public:
-    static Derived create(const T& val) {
-        return Derived::create_impl(val);
-    }
+template <typename Derived, typename T> class ISegNode {
+  public:
+    static Derived create(const T &val) { return Derived::create_impl(val); }
 
     static Derived op(const Derived &l, const Derived &r) {
         return Derived::op_impl(l, r);
     }
 };
 
-template<typename T, T neutral>
+template <typename T, T neutral>
 class SegNode : public ISegNode<SegNode<T, neutral>, T> {
-private:
-    T sum, pre, suf;
-public:
-    SegNode() : sum(neutral), pre(neutral), suf(neutral) {}
+  private:
+    T sum, pre;
 
-    const T& get_pre() {
-        return pre;
-    }
+  public:
+    SegNode() : sum(neutral), pre(neutral) {}
+
+    const T &get_ans() { return pre; }
 
     static SegNode create_impl(T val) {
         SegNode node;
         node.sum = val;
-        node.pre = node.suf = max(neutral, val);
+        node.pre = max(neutral, val);
         return node;
     }
 
@@ -148,18 +144,16 @@ public:
         SegNode res;
         res.sum = l.sum + r.sum;
         res.pre = max({neutral, l.pre, l.sum + r.pre});
-        res.suf = max({neutral, r.suf, l.suf + r.sum});
         return res;
     }
 };
 
-template<typename T, typename D>
-class SegmentTree {
-private:
+template <typename T, typename D> class SegmentTree {
+  private:
     vector<D> rangeData;
     size_t sz;
 
-public:
+  public:
     SegmentTree(const vector<T> &data) {
         rangeData.resize(2 * data.size());
         rangeData[0] = D();
@@ -172,7 +166,7 @@ public:
         }
     }
 
-    void update(size_t i, const T& value) {
+    void update(size_t i, const T &value) {
         i += sz;
         rangeData[i] = D::create(value);
         while (i >>= 1) {
@@ -180,13 +174,18 @@ public:
         }
     }
 
-    D queryRange(size_t l, size_t r) {
+    T queryRange(const size_t &l, const size_t &r) {
+        return queryRangeNodes(l, r).get_ans();
+    }
+
+  private:
+    D queryRangeNodes(size_t l, size_t r) {
         // EXCLUSIVE OF r
         l += sz, r += sz;
         D left, right;
         bool lefted = false, righted = false;
         while (l < r) {
-            if (l&1) {
+            if (l & 1) {
                 if (!lefted) {
                     left = rangeData[l];
                     lefted = true;
@@ -195,55 +194,57 @@ public:
                 }
                 l++;
             }
-            if (r&1) {
+            if (r & 1) {
                 --r;
                 if (!righted) {
                     righted = true;
                     right = rangeData[r];
                 } else {
-                    right = D::op(rangeData[r], right); 
+                    right = D::op(rangeData[r], right);
                 }
             }
             l >>= 1, r >>= 1;
         }
-        if (!lefted) return right;
-        if (!righted) return left;
+        if (!lefted) {
+            return right;
+        }
+        if (!righted) {
+            return left;
+        }
         return D::op(left, right);
     }
-
 };
 
 typedef SegNode<ll, 0ll> ll_node;
 
 int main() {
     /**
-     * Segment tree for max prefix sum operation. A regular segment tree won't work in this because
-     * the best prefix sum for a sub-range could be zero but its true sum might be used in a larger
-     * range's result. Instead, at each node we store 3 things: the best prefix sum (PRE) of the
-     * range, the total sum (SUM) of the range, and the best suffix sum (SUF) of the range.
+     * Segment tree for max prefix sum operation. A regular segment tree won't
+     * work in this because the best prefix sum for a sub-range could be zero
+     * but its true sum might be used in a larger range's result. Instead, at
+     * each node we store 2 things: the best prefix sum (PRE) of the range, and
+     * the total sum (SUM) of the range.
      *
-     * Ranges then need to be combined correctly. To combine a left and right range: the best PRE
-     * is max of the left PRE or the entire left SUM added with the right PRE; the best SUF is
-     * max of the right SUF or the left SUF added to the entire right SUM; the SUM is obvious.
-     * Since ranges can be empty, max PRE and SUF with 0.
-     * 
-     * The segment tree code is structured to generically work with any operation for future
-     * use cases.
+     * Ranges then need to be combined correctly. To combine a left and right
+     * range: the best PRE is max of the left PRE or the entire left SUM added
+     * with the right PRE; the SUM is obvious. Since ranges can be empty, max
+     * PRE with 0.
+     *
+     * The segment tree code is structured to generically work with any
+     * operation for future use cases.
      */
     fio;
-    int n, q, t;
+    size_t n, q, t;
     cin >> n >> q;
     vector<ll> data(n);
-    fora(i, 0, n) {
-        cin >> data[i];
-    }
+    foraz(i, 0, n) { cin >> data[i]; }
     SegmentTree<ll, ll_node> seg(data);
     while (q--) {
-        cin >> t; 
+        cin >> t;
         if (t == 2) {
             size_t l, r;
             cin >> l >> r;
-            cout << seg.queryRange(--l, r).get_pre() << edl;
+            cout << seg.queryRange(--l, r) << edl;
         } else {
             size_t k;
             ll u;

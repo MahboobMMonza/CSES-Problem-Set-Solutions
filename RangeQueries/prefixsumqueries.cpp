@@ -5,7 +5,10 @@ using namespace std;
 using namespace __gnu_pbds;
 
 #define fs first
-#define fio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0)
+#define fio                                                                    \
+    ios::sync_with_stdio(0);                                                   \
+    cin.tie(0);                                                                \
+    cout.tie(0)
 #define sc second
 #define pb push_back
 #define eb emplace_back
@@ -45,7 +48,7 @@ using namespace __gnu_pbds;
 #define fordzs(i, a, b, c) for (size_t i = (a); i > (b); i -= (c))
 #define fordezs(i, a, b, c) for (size_t i = (a); i >= (b); i -= (c))
 #define ford0zs(i, a, b, c) for (size_t i = (a); i < (b); i -= (c))
-#define MOD (int) (1e9 + 7)
+#define MOD (int)(1e9 + 7)
 
 typedef unsigned long long ull;
 typedef unsigned int uint;
@@ -63,8 +66,10 @@ inline ll mulMod(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
     ll res = 0;
     while (y) {
-        if (y & 1) res = (res + x) % m;
-        if (res < 0) res += m;
+        if (y & 1)
+            res = (res + x) % m;
+        if (res < 0)
+            res += m;
         x = (x << 1) % m;
         y >>= 1;
     }
@@ -75,7 +80,8 @@ inline ll logPow(ll x, ll y, ll m = numeric_limits<ll>::max()) {
     x %= m;
     ll res = 1;
     while (y) {
-        if (y & 1) res = mulMod(res, x, m);
+        if (y & 1)
+            res = mulMod(res, x, m);
         x = mulMod(x, x, m);
         y >>= 1;
     }
@@ -85,14 +91,17 @@ inline ll logPow(ll x, ll y, ll m = numeric_limits<ll>::max()) {
 inline ll fsLogPow(ll x, ll y) {
     ll res = 1;
     while (y) {
-        if (y & 1) res *= x;
+        if (y & 1)
+            res *= x;
         x *= x;
         y >>= 1;
     }
     return res;
 }
 
-inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) { return logPow(x, y % (m - 1), m); }
+inline ll pLogPow(ll x, ll y, ll m = 9223372036854775783) {
+    return logPow(x, y % (m - 1), m);
+}
 
 struct custom_hash {
     static ull splitmix64(ull x) {
@@ -104,15 +113,18 @@ struct custom_hash {
     }
 
     ull operator()(ull x) const {
-        static const ull FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        static const ull FIXED_RANDOM =
+            chrono::steady_clock::now().time_since_epoch().count();
         return splitmix64(x + FIXED_RANDOM);
     }
 };
 
-template<typename T>
-using indexed_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-template<typename T, typename K>
-using indexed_map = tree<T, K, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template <typename T>
+using indexed_set =
+    tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template <typename T, typename K>
+using indexed_map =
+    tree<T, K, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
 template <typename Derived, typename T> class ISegNode {
   public:

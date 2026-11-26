@@ -289,7 +289,7 @@ struct Vec2D {
     Vec2D operator-() const { return Vec2D(-x, -y); }
 };
 
-ostream& operator<<(ostream& os, gull val) {
+ostream &operator<<(ostream &os, gull val) {
     static constexpr gull K_1E18 = 1000000000000000000ll;
     ull parts[3];
     size_t c = 0;
@@ -299,14 +299,12 @@ ostream& operator<<(ostream& os, gull val) {
     }
     os << parts[c - 1];
     auto old = os.fill('0');
-    ford0z(i, c - 2, c) {
-        os << setw(18) << parts[i];
-    }
+    ford0z(i, c - 2, c) { os << setw(18) << parts[i]; }
     os.fill(old);
     return os;
 }
 
-ostream& operator<<(ostream& os, gll val) {
+ostream &operator<<(ostream &os, gll val) {
     if (val < 0) {
         os << '-';
         return os << static_cast<gull>(0 - static_cast<gull>(val));
@@ -320,8 +318,45 @@ int main() {
      * Then iterating i in [1, n - 1], sum the following for both x and y:
      * (coord[i] * i) - psa_coord[i - 1]. The sorting is necessary to ensure
      * that an x distance or a y distance difference is always non-negative.
+     * Note that we can in fact group the multiplications, additions, and
+     * subtractions together and only need to store the current running sum for
+     * PSA.
      *
-     * Even with this, the sum of all distances can overflow 64-bit integers.
+     * This works because taking Manhattan distances can be split by extracting
+     * constant factors and treating the x and y separately. Let S be sum:
+     *  S{for i in [0, n) :: S{for j in [i + 1, n) : |x_i - x_j| + |y_i - y_j|}}
+     * We see that x and y are independent of each other, so we can rearrange
+     * the sums in any order so long as we get the same result. We know that
+     * |a_i - a_j| == a_i - a_j when a_i >= a_j, so we order our coordinates
+     * so that for any given x/y value, it only has to interact with values
+     * below it for its contribution, i.e. sort the values and iterate in some
+     * direction. With this in mind, when inspecting the inner sum:
+     *  S{for j in [i + 1, n) : a_i - a_j}
+     * we see that a_i can be taken as a constant and is added n - i - 1 times.
+     * We can extract this as a single multiplication and add it to the total
+     * sum of the netgative of each element in a[j..n - 1], which is the same
+     * as subtracting the sum of a[j..n-1] from the aforementioned product;
+     * this is just a prefix sum, and we can precompute this in O(n) time for
+     * O(1) query. If we flip the sum loop to be:
+     *  S{for i in [1, n) :: for j in [0, i) : ...}
+     * we can get the same assurance of only subtracting smaller values from
+     * larger ones by iterating the coordinates in ascending order. Applying
+     * the same tricks as before, the inner loop becomes:
+     *    a_i * i + S{a[0..i-1]}
+     * which is still a product added to a prefix sum. Since we are iterating
+     * both the product and sum portion in ascending order, we can just use
+     * a single value for the running sum up to (i - 1), compute the product
+     * for a_i, then add a_i to the running sum.
+     *
+     * From here, we notice that x and y coordinate arrays are computed
+     * independent to each other and the coordinates needn't match up with their
+     * true pairings. We have
+     *     total += x[i] * i - sum_x + y[i] * i - sum_y
+     *     sum_x, sum_y = sum_x + x[i], sum_y + y[i]
+     * We can factor the multiplications, and combine sum_x and sum_y into one
+     * variable S, and just add x[i] + y[i] to it after each iteration.
+     *
+     * Note with this, the sum of all distances can overflow 64-bit integers.
      * Use __int128_t to handle the summation. We consequently need a special
      * function to write the __int128_t value to output. This is classic binary
      * to decimal conversion, except we needn't restrict ourselves to base 10:
@@ -339,15 +374,12 @@ int main() {
     foraz(i, 0, n) { cin >> x[i] >> y[i]; }
     sort(x.begin(), x.end());
     sort(y.begin(), y.end());
-    gll total = 0, sum_x = static_cast<gll>(x[0]),
-         sum_y = static_cast<gll>(y[0]); // typedef for faster typing, giant ll
+    gll total = 0; // typedef for faster typing, giant ll
+    ll sum = x[0] + y[0];
     foraz(i, 1, n) {
-        auto gx = static_cast<gll>(x[i]);
-        auto gy = static_cast<gll>(y[i]);
-        total += gx * static_cast<ll>(i) - sum_x;
-        total += gy * static_cast<ll>(i) - sum_y;
-        sum_x += gx;
-        sum_y += gy;
+        auto gxy = x[i] + y[i];
+        total += gxy * static_cast<ll>(i) - sum;
+        sum += gxy;
     }
     cout << total << edl;
     return 0;
